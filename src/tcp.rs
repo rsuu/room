@@ -28,8 +28,6 @@ pub enum HttpStatus {
     Err(u16, String),
 }
 
-pub fn match_stream(stream: &mut (impl Write + ?Sized + Read), text: &str) {}
-
 impl Tcp {
     pub fn client(ip: &str, port: &str, text: &str) {
         let addr = format!("{ip}:{port}");
@@ -70,7 +68,7 @@ impl Tcp {
                 let len = stream.read(&mut buf).unwrap();
                 let req = std::str::from_utf8(&buf[0..len]).unwrap();
 
-                if req.starts_with("GET") {
+                if req.starts_with("GET /") {
                     dbg!("GET");
 
                     let con = req.split_once("GET /").unwrap().1;
@@ -93,6 +91,7 @@ impl Tcp {
                     dbg!("POST");
                     let json = req;
                 } else if req.starts_with("PUT") {
+                    dbg!("PUT");
                 } else if req.starts_with("DELETE") {
                 } else {
                     dbg!(req);
